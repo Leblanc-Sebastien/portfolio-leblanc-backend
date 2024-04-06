@@ -2,6 +2,8 @@ const express = require("express")
 const nodemailer = require("nodemailer");
 const cors = require("cors")
 
+require('dotenv').config()
+
 //express **************************
 
 const app = express()
@@ -22,45 +24,45 @@ const transporter = nodemailer.createTransport({
     port: 587,
     secure: false, // Use `true` for port 465, `false` for all other ports
     auth: {
-      user: "sugii.noob@gmail.com",
-      pass: "ypst pcfx mvhi kxhd",
+        user: process.env.USER,
+        pass: process.env.APP_PASSWORD
     },
-  });
-  
-  
-  const mailOptions = {
-      from:{
-          name:'Sebastien Leblanc',
-          adress: "sugii.noob@gmail.com"
-      },
-      to: ["leblanc.sbt@gmail.com"],
-      subject:'test nodemailer - send',
-      text: "hello world",
-      html: "<b>prout</<b>"
-  }
-  
-  const sendMail = async ( transporter, mailOptions) => {
-      try{
-          await transporter.sendMail(mailOptions)
-          console.log("Email envoyé correctement!")
-      }
-      catch (error){
-          console.log(error)
-      }
-  }
-  
+});
+
+
+const mailOptions = {
+    from: {
+        name: 'Sebastien Leblanc',
+        adress: process.env.USER
+    },
+    to: ["leblanc.sbt@gmail.com"],
+    subject: 'test nodemailer - send',
+    text: "hello world",
+    html: "<b>prout</<b>"
+}
+
+const sendMail = async (transporter, mailOptions) => {
+    try {
+        await transporter.sendMail(mailOptions)
+        console.log("Email envoyé correctement!")
+    }
+    catch (error) {
+        console.log(error)
+    }
+}
+
 //routes **************************
 
 app.post('/api/postemail/', (req, res, next) => {
-    const emailCreated = req.body  
-    
+    const emailCreated = req.body
+
     const mailOptions = {
-        from:{
-            name:`${emailCreated.fullName}`,
+        from: {
+            name: `${emailCreated.fullName}`,
             adress: "sugii.noob@gmail.com"
         },
         to: ["leblanc.sbt@gmail.com"],
-        subject:`${emailCreated.subject}`,
+        subject: `${emailCreated.subject}`,
         text: `${emailCreated.message}`,
         html: ` <h1>Email envoyé du portfolio</h1>
                 <h2>${emailCreated.subject}</h2>
