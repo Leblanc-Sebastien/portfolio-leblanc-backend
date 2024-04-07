@@ -29,7 +29,6 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-
 const mailOptions = {
     from: {
         name: 'Sebastien Leblanc',
@@ -41,19 +40,9 @@ const mailOptions = {
     html: "<b>prout</<b>"
 }
 
-const sendMail = async (transporter, mailOptions) => {
-    try {
-        await transporter.sendMail(mailOptions)
-        console.log("Email envoyé correctement!")
-    }
-    catch (error) {
-        console.log(error)
-    }
-}
-
 //routes **************************
 
-app.post('/api/postemail/', (req, res, next) => {
+app.post('/api/postemail/', async (req, res, next) => {
     const emailCreated = req.body
 
     const mailOptions = {
@@ -72,8 +61,15 @@ app.post('/api/postemail/', (req, res, next) => {
                 <p>${emailCreated.message}</p>`
     }
 
-    sendMail(transporter, mailOptions)
-
-    res.json(emailCreated)
+    try {
+        await transporter.sendMail(mailOptions)
+        console.log("Email bien envoyé")
+        res.json(emailCreated)
+    }
+    catch (error) {
+        console.error(error.message)
+        res.sendStatus(500)
+    }
 })
+
 
