@@ -29,17 +29,6 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-const mailOptions = {
-    from: {
-        name: 'Sebastien Leblanc',
-        adress: process.env.USER
-    },
-    to: ["leblanc.sbt@gmail.com"],
-    subject: 'test nodemailer - send',
-    text: "hello world",
-    html: "<b>prout</<b>"
-}
-
 //routes **************************
 
 app.post('/api/postemail/', async (req, res, next) => {
